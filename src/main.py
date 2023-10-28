@@ -18,32 +18,15 @@
 |License: The Unlicense                                         |
 |===============================================================|
 '''
-# Import packages
-import argparse
-import crossref_commons.retrieval
 
-from tqdm import tqdm  
-from time import sleep
 from pathlib import Path  
-
-# Import functions from other files
+import crossref_commons.retrieval
+from time import sleep
 from parsebib import bib2df
-from config import load_config
+from tqdm import tqdm  
 
-# Load configurations
+from config import RECURSION_DEPTH, FILE_BIB, FILE_TXT_OUT, DIR_OUTPUT
 
-
-
-# Parse command-line arguments
-parser = argparse.ArgumentParser(description='Process bibliography.')
-parser.add_argument('--input_file', type=str, default='bibliography.bib', help='Input bibliography file')
-parser.add_argument('--recursion_depth', type=int, default=4, help='Recursion depth')
-args = parser.parse_args()
-
-# Override values from config.py
-RECURSION_DEPTH = args.recursion_depth
-FILE_BIB = DIR_INPUT / args.input_file
-FILE_TXT_OUT = DIR_OUTPUT / f"{args.input_file.split('.')[0]}_output.txt"
 df = bib2df(FILE_BIB)
 if df.empty:
     print('No data found, check input file')
@@ -108,10 +91,3 @@ for i in range(RECURSION_DEPTH):
     bib_dois = get_related_dois(bib_dois, i)
     
     print(f'{"="*80}\n')
-
-if __name__ == '__main__':
-    # Load configurations
-    config = load_config(input_file='your_input.bib', recursion_depth=5)
-
-    # Now use config dictionary for your operations
-    print(config['RECURSION_DEPTH'])

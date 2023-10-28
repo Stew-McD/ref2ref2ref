@@ -2,35 +2,38 @@ from pathlib import Path
 import random
 import os
 
-def load_config(input_file='bibliography.bib', recursion_depth=4):
-    config = {}
-    # Maximum depth for recursion
-    config['RECURSION_DEPTH'] = recursion_depth
+# Maximum depth for recursion
+RECURSION_DEPTH = 4
 
-    # Define directories and file paths
-    config['DIR_CWD'] = Path.cwd()
-    config['DIR_ROOT'] = Path(__file__).parent.parent
-    config['DIR_DATA'] = config['DIR_ROOT'] / 'data'
-    config['DIR_OUTPUT'] = config['DIR_DATA'] / 'output'
-    config['DIR_INPUT'] = config['DIR_DATA'] / 'input'
-    config['DIR_TMP'] = config['DIR_DATA'] / 'tmp'
+# Name of the input file
+INPUT_FILE_NAME = 'bibliography.bib'
 
-    # Create directories if they don't exist
-    DIRS = [config['DIR_DATA'], config['DIR_OUTPUT'], config['DIR_INPUT'], config['DIR_TMP']]
-    for DIR in DIRS:
-        DIR.mkdir(exist_ok=True)
+# Define directories and file paths
+DIR_CWD = Path.cwd()
+DIR_ROOT = DIR_CWD
+DIR_DATA = DIR_ROOT / 'data'
+DIR_OUTPUT = DIR_DATA / 'output'
+DIR_INPUT = DIR_DATA / 'input'
+DIR_TMP = DIR_DATA / 'tmp'
 
-    # Define file names
-    config['FILE_BIB'] = config['DIR_INPUT'] / input_file
-    config['FILE_TXT_OUT'] = config['DIR_OUTPUT'] / f"{input_file.split('.')[0]}_output.txt"
+# Create directories if they don't exist
+DIRS = [DIR_DATA, DIR_OUTPUT, DIR_INPUT, DIR_TMP]
+for DIR in DIRS: 
+    DIR.mkdir(exist_ok=True)
 
-    # Generate a random email or use the one from environment variable
-    EMAIL_FROM_ENV = os.getenv('EMAIL_CROSSREF')
-    random_email = f"scmm+{random.randint(0, 1000000)}@pm.me"
-    config['EMAIL'] = EMAIL_FROM_ENV if EMAIL_FROM_ENV else random_email
 
-    # Set Environmental Variables for crossref user agent
-    os.environ["CR_API_AGENT"] =  f"polite user agent; including mailto:{config['EMAIL']}"
-    os.environ["CR_API_MAILTO"] = config['EMAIL']
-    
-    return config
+# Check for input file at root, else use default in 'data/input'
+FILE_BIB = DIR_ROOT / INPUT_FILE_NAME if (DIR_ROOT / INPUT_FILE_NAME).exists() else DIR_INPUT / INPUT_FILE_NAME
+
+# Make the output file name dependent on the input file name
+OUTPUT_FILE_NAME = f"{INPUT_FILE_NAME.split('.')[0]}_output.txt"
+FILE_TXT_OUT = DIR_OUTPUT / OUTPUT_FILE_NAME
+
+# Generate a random email or use one from environment variable
+EMAIL_FROM_ENV = os.getenv('EMAIL_CROSSREF')
+random_email = f"scmm+{random.randint(0, 1000000)}@pm.me"
+EMAIL = EMAIL_FROM_ENV if EMAIL_FROM_ENV else random_email
+
+# Set Environmental Variables for crossref user agent
+os.environ["CR_API_AGENT"] =  f"polite user agent; including mailto:{EMAIL}"
+os.environ["CR_API_MAILTO"] = EMAIL

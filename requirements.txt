@@ -1,0 +1,4 @@
+bibtexparser==1.4.1
+crossref_commons==0.0.7
+pandas==1.5.1
+tqdm==4.66.1

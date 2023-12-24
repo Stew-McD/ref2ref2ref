@@ -28,7 +28,7 @@ def bib2df(FILE_BIB):
         return df
     
     elif str(FILE_BIB).endswith('.txt'):
-        df = pd.read_csv(FILE_BIB, header=None)
+        df = pd.read_csv(FILE_BIB, header=None, names=['doi'])
         return df
     
     else:

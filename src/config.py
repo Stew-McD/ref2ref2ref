@@ -3,10 +3,10 @@ import random
 import os
 
 # Maximum depth for recursion
-RECURSION_DEPTH = 4
+RECURSION_DEPTH = 3
 
 # Name of the input file
-INPUT_FILE_NAME = 'bibliography.bib'
+INPUT_FILE_NAME = 'mc.txt'
 
 # Define directories and file paths
 DIR_CWD = Path.cwd()
